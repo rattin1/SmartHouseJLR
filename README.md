@@ -111,5 +111,5 @@ A comunicação entre dispositivos e interface de controle é realizada via **pr
 ---
 
 ## 🔗 6. Link Público Wokwi
-[🔗 Projeto no Wokwi](INSERIR-LINK-AQUI)
+[🔗 Projeto no Wokwi](https://wokwi.com/projects/438565034123503617)
 
