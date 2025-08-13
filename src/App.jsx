@@ -29,7 +29,6 @@ function App() {
       <div className="text-dark  d-flex flex-column gap-3 py-3 align-items-center">
         <Garagem />
       </div>
-
       {/* Modal do LogChat */}
       <div 
         className="modal fade" 
