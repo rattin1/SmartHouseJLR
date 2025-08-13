@@ -1,4 +1,7 @@
 body{
   background: radial-gradient(circle, hsla(208, 36%, 37%, 1) 0%, hsla(0, 0%, 0%, 1) 100%) !important;
-
+  box-sizing: border-box;
+  border: 0;
+  padding: 0;
+  margin: 0;
 }
