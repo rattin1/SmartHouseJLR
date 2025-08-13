@@ -34,6 +34,62 @@ let currentSensorData = { temperatura: 0, umidade: 0 };
 let isConnected = false;
 let reconnectInterval = null;
 
+// 🆕 Sistema de log de mensagens MQTT
+let messageLogCallbacks = [];
+let messageHistory = [];
+
+// 🆕 Função para componentes se inscreverem no log de mensagens
+const subscribeMessageLog = (callback) => {
+    messageLogCallbacks.push(callback);
+    console.log("📋 Componente inscrito para receber log de mensagens");
+    
+    // Envia histórico existente para o novo componente
+    if (messageHistory.length > 0) {
+        callback(messageHistory);
+    }
+    
+    return () => {
+        messageLogCallbacks = messageLogCallbacks.filter(cb => cb !== callback);
+    };
+};
+
+// 🆕 Função para obter histórico de mensagens
+const getMessageHistory = () => messageHistory;
+
+// 🆕 Função para adicionar mensagem ao log
+const addToMessageLog = (topic, payload, type = 'received') => {
+    const now = new Date();
+    const hour = now.getHours().toString().padStart(2, "0");
+    const minute = now.getMinutes().toString().padStart(2, "0");
+    const time = `${hour}:${minute}`;
+    
+    const logEntry = {
+        id: Date.now() + Math.random(), // ID único
+        author: topic, // Tópico como autor
+        text: payload, // Conteúdo da mensagem
+        time: time,
+        type: type, // 'received' ou 'sent'
+        timestamp: now
+    };
+    
+    // Adiciona ao histórico (máximo 100 mensagens)
+    messageHistory.push(logEntry);
+    if (messageHistory.length > 100) {
+        messageHistory = messageHistory.slice(-100);
+    }
+    
+    // Notifica todos os componentes inscritos
+    messageLogCallbacks.forEach(callback => {
+        try {
+            callback([...messageHistory]); // Cópia do array
+        } catch (error) {
+            console.error("❌ Erro ao notificar log de mensagens:", error);
+        }
+    });
+    
+    console.log(`📝 Log adicionado: [${type}] ${topic}: ${payload}`);
+};
+
 // Função para componentes se inscreverem para receber dados
 const subscribeSensorData = (callback) => {
     sensorDataCallbacks.push(callback);
@@ -67,6 +123,9 @@ function setupCallbacks() {
         console.error("❌ Conexão MQTT perdida:", responseObject.errorMessage);
         console.log("🔄 Iniciando processo de reconexão...");
         
+        // Adiciona ao log
+        addToMessageLog("SISTEMA", "Conexão MQTT perdida", "system");
+        
         // Inicia tentativas de reconexão
         if (!reconnectInterval) {
             reconnectInterval = setInterval(attemptReconnect, 3000);
@@ -77,6 +136,10 @@ function setupCallbacks() {
     client.onMessageArrived = (message) => {
         console.log("📥 Mensagem recebida:", message.destinationName, message.payloadString);
 
+        // 🆕 Adiciona TODAS as mensagens ao log
+        addToMessageLog(message.destinationName, message.payloadString, "received");
+
+        // Processa dados do sensor especificamente
         if (message.destinationName === topicoSensor) {
             try {
                 const dados = JSON.parse(message.payloadString);
@@ -131,13 +194,16 @@ function attemptReconnect() {
             isConnected = true;
             console.log("✅ Reconectado ao MQTT");
             
+            // Adiciona ao log
+            addToMessageLog("SISTEMA", "Reconectado ao MQTT", "system");
+            
             // Para o intervalo de reconexão
             if (reconnectInterval) {
                 clearInterval(reconnectInterval);
                 reconnectInterval = null;
             }
             
-            // Reinscreve no tópico
+            // Reinscreve no tópico do sensor
             client.subscribe(topicoSensor, {
                 onSuccess: () => {
                     console.log("📡 Reinscrito no tópico sensor");
@@ -168,6 +234,9 @@ function initMQTT() {
         onSuccess: () => {
             isConnected = true;
             console.log("✅ Conectado ao broker MQTT");
+            
+            // Adiciona ao log
+            addToMessageLog("SISTEMA", "Conectado ao broker MQTT", "system");
             
             client.subscribe(topicoSensor, {
                 onSuccess: () => {
@@ -259,6 +328,7 @@ function controlarGaragem(dispositivo, estado) {
 function enviarComando(topico, estado) {
     if (!isClientConnected()) {
         console.warn("⚠️ Cliente não conectado. Comando será perdido:", topico, estado);
+        addToMessageLog("SISTEMA", `Comando perdido - desconectado: ${topico} -> ${estado}`, "error");
         return;
     }
 
@@ -266,9 +336,14 @@ function enviarComando(topico, estado) {
         const message = new Message(estado);
         message.destinationName = topico;
         client.send(message);
+        
+        // 🆕 Adiciona comando enviado ao log
+        addToMessageLog(topico, estado, "sent");
+        
         console.log(`📤 Enviado para ${topico}: ${estado}`);
     } catch (error) {
         console.error("❌ Erro ao enviar comando:", error);
+        addToMessageLog("SISTEMA", `Erro ao enviar: ${topico} -> ${estado}`, "error");
     }
 }
 
@@ -289,5 +364,7 @@ export {
     enviarComando,
     subscribeSensorData,
     getCurrentSensorData,
-    getConnectionStatus
+    getConnectionStatus,
+    subscribeMessageLog,
+    getMessageHistory
 };
