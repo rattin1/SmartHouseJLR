@@ -1,18 +1,7 @@
-:root{
-  --btn-on-bg: linear-gradient(135deg, #fff7d6 0%, #fff3c4 100%); /* amarelo pastel */
-}
-
-/* efeito de 'pressionado' leve */
-.toggle-btn:active{ transform: translateY(1px); }
-
-/* quando ligado: alterar visual para amarelo pastel e texto escuro */
-.toggle-btn.is-on{
-  background: var(--btn-on-bg);
-}
-
-
-.curtain {
-  transition: width 0.8s ease;
-  transform-origin: left;
-  stroke-width: 0.5;
+body{
+  background: radial-gradient(circle, hsla(208, 36%, 37%, 1) 0%, hsla(0, 0%, 0%, 1) 100%) !important;
+  box-sizing: border-box;
+  border: 0;
+  padding: 0;
+  margin: 0;
 }
