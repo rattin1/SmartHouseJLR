@@ -1,0 +1,16 @@
+.TempTxt{
+    margin : 0 0 5px 0;
+    color: rgb(255, 99, 132);
+}
+
+.Humidtxt{
+    margin : 0 0 5px 0;
+    color: rgb(53, 162, 235);
+}
+
+.colunasPeriodo{
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.tamanhoGrafico{
+    height: 400px;
+}
