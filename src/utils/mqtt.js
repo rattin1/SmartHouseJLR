@@ -4,7 +4,10 @@ import { Paho } from 'paho-mqtt';
 
 // 📡 Tópicos MQTT utilizados no projeto Smart House JLR
 
+
+
 // Quarto
+const movimento = "";
 const topicoLuz = "smarthouseJLR/quarto/luz";
 const topicoTomada = "smarthouseJLR/quarto/tomada";
 const topicoCortina = "smarthouseJLR/quarto/cortina";
@@ -16,6 +19,7 @@ const topicoArCondicionado = "smarthouseJLR/sala/arCondicionado";
 const topicoUmidificador = "smarthouseJLR/sala/umidificador";
 
 // Garagem
+const topicoGaragem = "smarthouseJLR/garagem";
 const topicoGaragemLed = "smarthouseJLR/garagem/led";
 const topicoGaragemBascular = "smarthouseJLR/garagem/bascular";
 const topicoGaragemSocial = "smarthouseJLR/garagem/social";
@@ -49,6 +53,10 @@ client.onMessageArrived = (message) => {
             // Exibe erro se o JSON estiver malformado
             console.error("❌ Erro ao parsear JSON:", e);
         }
+    } else if (message.destinationName === topicoGaragem){
+        movimento = message.payloadString; // Atualiza a variável movimento com o valor recebido
+        document.getElementById("movimento").innerText = movimento;
+
     }
 };
 
@@ -62,6 +70,7 @@ client.connect({
         
         // Inscreve-se nos tópicos para receber dados
         client.subscribe(topicoSensor); // dados do sensor DHT22
+        client.subscribe(topicoGaragem) // dados do sensor de movimento DIR.
         
         console.log("📡 Inscrito nos tópicos de monitoramento");
     },
@@ -157,5 +166,7 @@ export {
     controlarQuarto,
     controlarSala,
     controlarGaragem,
-    enviarComando
+    enviarComando,
+    client
 };
+
