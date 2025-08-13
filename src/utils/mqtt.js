@@ -1,5 +1,6 @@
-import { Client } from 'paho-mqtt';
+import { Client, Message } from 'paho-mqtt';
 const brokerUrl = "wss://broker.hivemq.com:8884/mqtt";
+import { Paho } from 'paho-mqtt';
 
 // 📡 Tópicos MQTT utilizados no projeto Smart House JLR
 
@@ -140,7 +141,7 @@ function controlarGaragem(dispositivo, estado) {
 // 📤 Função genérica para enviar comandos via MQTT
 function enviarComando(topico, estado) {
     // Cria a mensagem MQTT com o estado desejado
-    const message = new Client.Message(estado);
+    const message = new Message(estado);
 
     // Define para qual tópico essa mensagem será enviada
     message.destinationName = topico;
