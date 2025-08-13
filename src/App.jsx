@@ -10,16 +10,18 @@ function App() {
 
   return (
     <div>
-      <header className='bg-dark bg-opacity-75 p-2 w-100'>
-        <h1 className='text-light text-start'>SMARTHOUSEJLR</h1>
-        <button
-          className="btn bg-primary text-light btn-sm text-end"
-          data-bs-toggle="modal"
-          data-bs-target="#LogModal"
-        >
-          📝 Abrir log de mensagens
-        </button>
-      </header>
+    <header className='bg-dark bg-opacity-75 p-4 vw-100'>
+  <div className='d-flex justify-content-between align-items-center'>
+    <h1 className='text-light m-0'>SMARTHOUSEJLR</h1>
+    <button
+      className="btn bg-primary text-light btn-sm me-3"
+      data-bs-toggle="modal"
+      data-bs-target="#LogModal"
+    >
+      📝 Abrir log de mensagens
+    </button>
+  </div>
+</header>
       
       <Tuchart/>
 
