@@ -11,6 +11,7 @@ import {
   Legend,
 } from 'chart.js';
 import { subscribeSensorData, getCurrentSensorData, getConnectionStatus } from '../../utils/mqtt.js';
+import styles from './Tuchart.module.css'; // 🆕 ADICIONE ESTA LINHA
 
 ChartJS.register(
   CategoryScale,
@@ -368,7 +369,7 @@ const Tuchart = () => {
       </div>
 
       {/* Gráfico */}
-      <div className="mb-4 tamanhoGrafico">
+      <div className={`mb-4 ${styles.tamanhoGrafico}`}>
         {filteredData.length > 0 ? (
           <Line data={chartData} options={options} />
         ) : (
@@ -384,7 +385,7 @@ const Tuchart = () => {
       {filteredData.length > 0 && (
         <div className="p-3 bg-light rounded border">
           <h4 className='mt-0'>📊 Estatísticas do Período</h4>
-          <div className='d-grid gap-3 colunasPeriodo' >
+          <div className={`d-grid gap-3 ${styles.colunasPeriodo}`}>
             <div>
               <strong>🌡️ Temperatura:</strong>
               <p>Média: {(filteredData.reduce((acc, item) => acc + item.temperatura, 0) / filteredData.length).toFixed(1)}°C</p>
@@ -397,11 +398,11 @@ const Tuchart = () => {
               <p>Máxima: {Math.max(...filteredData.map(item => item.umidade)).toFixed(1)}%</p>
               <p>Mínima: {Math.min(...filteredData.map(item => item.umidade)).toFixed(1)}%</p>
             </div>
-            <div>
-              <strong>📈 Dados:</strong>
-              <p>Total de Leituras: {filteredData.length}</p>
-              <p>Período: {timeFilter === '24h' ? '24h' : timeFilter === 'yesterday' ? 'Ontem' : '7 dias'}</p>
-            </div>
+          </div>
+          <div className="mt-3">
+            <strong>📈 Dados:</strong>
+            <p>Total de Leituras: {filteredData.length}</p>
+            <p>Período: {timeFilter === '24h' ? '24h' : timeFilter === 'yesterday' ? 'Ontem' : '7 dias'}</p>
           </div>
         </div>
       )}

@@ -9,8 +9,9 @@
 }
 
 .colunasPeriodo{
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
 }
+
 .tamanhoGrafico{
-    height: 400px;
+    height: 520px; /* 400px + 30% = 520px */
 }
