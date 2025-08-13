@@ -289,7 +289,7 @@ const Tuchart = () => {
   const storageStats = getStorageStats();
 
   return (
-    <div className="container ms-1 p-4 border rounded shadow-sm">
+    <div className="container my-4 p-2 rounded shadow-sm">
       <h2 className='text-light container bg-dark p-4 rounded rounded-2'>📊 Gráfico de Temperatura e Umidade</h2>
       
       {/* Status da conexão */}

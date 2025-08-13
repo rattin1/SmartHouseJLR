@@ -23,8 +23,9 @@ function App() {
     </button>
   </div>
 </header>
-      
+<div className="d-flex flex-column gap-3 py-3 align-items-center">
       <Tuchart/>
+      </div>
       <div className="text-dark  d-flex flex-column gap-3 py-3 align-items-center">
         <Garagem />
       </div>
