@@ -1,42 +1,18 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root{
+  --btn-on-bg: linear-gradient(135deg, #fff7d6 0%, #fff3c4 100%); /* amarelo pastel */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* efeito de 'pressionado' leve */
+.toggle-btn:active{ transform: translateY(1px); }
+
+/* quando ligado: alterar visual para amarelo pastel e texto escuro */
+.toggle-btn.is-on{
+  background: var(--btn-on-bg);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.curtain {
+  transition: width 0.8s ease;
+  transform-origin: left;
+  stroke-width: 0.5;
 }
