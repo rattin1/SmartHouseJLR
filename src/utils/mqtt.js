@@ -16,6 +16,7 @@ const topicoSensor = "smarthouseJLR/sala/lerSensor";
 const topicoLed = "smarthouseJLR/sala/led1";
 const topicoArCondicionado = "smarthouseJLR/sala/arCondicionado";
 const topicoUmidificador = "smarthouseJLR/sala/umidificador";
+const topicoStatusSala = "smarthouseJLR/sala/status";
 
 // Garagem
 const topicoGaragemLed = "smarthouseJLR/garagem/led";
@@ -37,6 +38,18 @@ let reconnectInterval = null;
 // 🆕 Sistema de log de mensagens MQTT
 let messageLogCallbacks = [];
 let messageHistory = [];
+
+// 🆕 Sistema de status dos dispositivos
+let deviceStatusCallbacks = [];
+let currentDeviceStatus = {
+  sala: {
+    led: "OFF",
+    arCondicionado: "OFF",
+    umidificador: "OFF",
+    autoAr: "OFF",
+    autoUmidificador: "OFF"
+  }
+};
 
 // 🆕 Função para componentes se inscreverem no log de mensagens
 const subscribeMessageLog = (callback) => {
@@ -88,6 +101,40 @@ const addToMessageLog = (topic, payload, type = 'received') => {
     });
     
     console.log(`📝 Log adicionado: [${type}] ${topic}: ${payload}`);
+};
+
+// 🆕 Função para componentes se inscreverem no status dos dispositivos
+const subscribeDeviceStatus = (callback) => {
+    deviceStatusCallbacks.push(callback);
+    console.log("📋 Componente inscrito para receber status dos dispositivos");
+    
+    // Envia status atual imediatamente
+    callback(currentDeviceStatus);
+    
+    return () => {
+        deviceStatusCallbacks = deviceStatusCallbacks.filter(cb => cb !== callback);
+    };
+};
+
+// 🆕 Função para obter status atual dos dispositivos
+const getCurrentDeviceStatus = () => currentDeviceStatus;
+
+// 🆕 Função para atualizar status dos dispositivos
+const updateDeviceStatus = (room, device, status) => {
+    if (currentDeviceStatus[room]) {
+        currentDeviceStatus[room][device] = status;
+        
+        // Notifica todos os componentes inscritos
+        deviceStatusCallbacks.forEach(callback => {
+            try {
+                callback({ ...currentDeviceStatus });
+            } catch (error) {
+                console.error("❌ Erro ao notificar status de dispositivo:", error);
+            }
+        });
+        
+        console.log(`📊 Status atualizado: ${room}.${device} = ${status}`);
+    }
 };
 
 // Função para componentes se inscreverem para receber dados
@@ -167,6 +214,35 @@ function setupCallbacks() {
                 console.error("❌ Erro ao parsear JSON:", e);
             }
         }
+
+        // 🆕 Processa status dos dispositivos da sala
+        if (message.destinationName === topicoStatusSala) {
+            try {
+                const status = JSON.parse(message.payloadString);
+                
+                // Atualiza status dos dispositivos
+                if (status.led !== undefined) {
+                    updateDeviceStatus("sala", "led", status.led);
+                }
+                if (status.arCondicionado !== undefined) {
+                    updateDeviceStatus("sala", "arCondicionado", status.arCondicionado);
+                }
+                if (status.umidificador !== undefined) {
+                    updateDeviceStatus("sala", "umidificador", status.umidificador);
+                }
+                if (status.autoAr !== undefined) {
+                    updateDeviceStatus("sala", "autoAr", status.autoAr);
+                }
+                if (status.autoUmidificador !== undefined) {
+                    updateDeviceStatus("sala", "autoUmidificador", status.autoUmidificador);
+                }
+
+                console.log("📊 Status da sala atualizado:", status);
+
+            } catch (e) {
+                console.error("❌ Erro ao parsear status JSON:", e);
+            }
+        }
     };
 }
 
@@ -203,14 +279,16 @@ function attemptReconnect() {
                 reconnectInterval = null;
             }
             
-            // Reinscreve no tópico do sensor
+            // Reinscreve nos tópicos
             client.subscribe(topicoSensor, {
-                onSuccess: () => {
-                    console.log("📡 Reinscrito no tópico sensor");
-                },
-                onFailure: (err) => {
-                    console.error("❌ Falha ao se reinscrever:", err);
-                }
+                onSuccess: () => console.log("📡 Reinscrito no tópico sensor"),
+                onFailure: (err) => console.error("❌ Falha ao se reinscrever no sensor:", err)
+            });
+
+            // 🆕 Se inscreve no tópico de status da sala
+            client.subscribe(topicoStatusSala, {
+                onSuccess: () => console.log("📡 Inscrito no tópico de status da sala"),
+                onFailure: (err) => console.error("❌ Falha ao se inscrever no status:", err)
             });
         },
         onFailure: (err) => {
@@ -238,13 +316,16 @@ function initMQTT() {
             // Adiciona ao log
             addToMessageLog("SISTEMA", "Conectado ao broker MQTT", "system");
             
+            // Se inscreve no tópico do sensor
             client.subscribe(topicoSensor, {
-                onSuccess: () => {
-                    console.log("📡 Inscrito no tópico sensor");
-                },
-                onFailure: (err) => {
-                    console.error("❌ Falha ao se inscrever:", err);
-                }
+                onSuccess: () => console.log("📡 Inscrito no tópico sensor"),
+                onFailure: (err) => console.error("❌ Falha ao se inscrever no sensor:", err)
+            });
+
+            // 🆕 Se inscreve no tópico de status da sala
+            client.subscribe(topicoStatusSala, {
+                onSuccess: () => console.log("📡 Inscrito no tópico de status da sala"),
+                onFailure: (err) => console.error("❌ Falha ao se inscrever no status:", err)
             });
         },
         onFailure: (err) => {
@@ -327,7 +408,6 @@ function controlarGaragem(dispositivo, estado) {
 // 📤 Função genérica para enviar comandos via MQTT
 function enviarComando(topico, estado) {
     // Cria a mensagem MQTT com o estado desejado
-    const message = new Message(estado);
     if (!isClientConnected()) {
         console.warn("⚠️ Cliente não conectado. Comando será perdido:", topico, estado);
         addToMessageLog("SISTEMA", `Comando perdido - desconectado: ${topico} -> ${estado}`, "error");
@@ -368,5 +448,7 @@ export {
     getCurrentSensorData,
     getConnectionStatus,
     subscribeMessageLog,
-    getMessageHistory
+    getMessageHistory,
+    subscribeDeviceStatus,
+    getCurrentDeviceStatus
 };

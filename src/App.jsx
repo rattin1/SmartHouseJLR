@@ -5,6 +5,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import Garagem from "./Garagem";
 import Tuchart from './components/TUchart/Tuchart';
 import LogChat from './components/LogChat/LogChat';
+import Quarto from './components/Quarto/Quarto';
+import SalaDeEstar from "./components/SalaDeEstar/SalaDeEstar";
 
 function App() {
 
@@ -26,8 +28,14 @@ function App() {
 <div className="d-flex flex-column gap-3 py-3 align-items-center">
       <Tuchart/>
       </div>
+      <div className="d-flex flex-column gap-3 py-3 align-items-center">
+      <SalaDeEstar />
+      </div>
       <div className="text-dark  d-flex flex-column gap-3 py-3 align-items-center">
         <Garagem />
+      </div>
+      <div className="text-dark  d-flex flex-column gap-3 py-3 align-items-center">
+        <Quarto />
       </div>
       {/* Modal do LogChat */}
       <div 

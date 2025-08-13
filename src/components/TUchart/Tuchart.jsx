@@ -295,7 +295,7 @@ const Tuchart = () => {
       {/* Status da conexão */}
       <div className={`mb-3 p-2 rounded border ${connectionStatus.isConnected ? 'bg-success bg-opacity-10 border-success' : 'bg-warning bg-opacity-10 border-warning'}`}>
         <div className="d-flex justify-content-between align-items-center">
-          <span>
+          <span className='text-light'>
             {connectionStatus.isConnected ? (
               <><strong>🟢 MQTT Conectado</strong> - Recebendo dados em tempo real</>
             ) : (
@@ -306,8 +306,8 @@ const Tuchart = () => {
       </div>
       
       {/* Dados em tempo real */}
-      <div className="d-flex gap-4 mb-4 p-3 bg-light rounded justify-content-center">
-        <div className='p-2 rounded border border-2 border-danger ' style={{  
+      <div className="d-flex gap-4 mb-4 p-3 bg-dark bg-opacity-75 rounded justify-content-center">
+        <div className='p-2 rounded border border-2 border-danger text-light' style={{  
           backgroundColor: 'rgba(255, 99, 132, 0.1)',
           opacity: connectionStatus.isConnected ? 1 : 0.8
         }}>
@@ -320,7 +320,7 @@ const Tuchart = () => {
           )}
         </div>
         
-        <div className='p-2 rounded border border-2 border-primary' style={{ 
+        <div className='p-2 rounded border border-2 border-primary text-light' style={{ 
           backgroundColor: 'rgba(53, 162, 235, 0.1)',
           opacity: connectionStatus.isConnected ? 1 : 0.8
         }}>
@@ -335,7 +335,7 @@ const Tuchart = () => {
       </div>
 
       {/* Informações de armazenamento */}
-      <div className="mb-3 p-2 bg-info bg-opacity-10 rounded border border-info">
+      <div className="mb-3 p-2 bg-info bg-opacity-10 rounded border border-info text-light">
         <h6 className="mb-2">💾 Informações de Armazenamento Local</h6>
         <div className="row">
           <div className="col-md-4">
@@ -359,7 +359,7 @@ const Tuchart = () => {
           id="timeFilter"
           value={timeFilter} 
           onChange={(e) => setTimeFilter(e.target.value)}
-          className="px-3 py-2 rounded border fs-6 border-secondary"
+          className="px-3 py-2 rounded border fs-6 border-secondary bg-transparent text-light"
           
         >
           <option value="24h">Últimas 24 horas</option>
@@ -373,7 +373,7 @@ const Tuchart = () => {
         {filteredData.length > 0 ? (
           <Line data={chartData} options={options} />
         ) : (
-          <div className="h-100 d-flex align-items-center justify-content-center bg-light rounded border border-2 border-secondary">
+          <div className="h-100 d-flex align-items-center justify-content-center bg-secondary rounded border border-2 border-secondary">
             <p className='fs-5 text-muted'>
               📈 Aguardando dados para o período selecionado...
             </p>
@@ -383,7 +383,7 @@ const Tuchart = () => {
 
       {/* Estatísticas */}
       {filteredData.length > 0 && (
-        <div className="p-3 bg-light rounded border">
+        <div className="p-3 bg-dark bg-opacity-75 rounded border text-light">
           <h4 className='mt-0'>📊 Estatísticas do Período</h4>
           <div className={`d-grid gap-3 ${styles.colunasPeriodo}`}>
             <div>
