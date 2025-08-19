@@ -10,12 +10,16 @@ function App() {
   
 
   return (
-    <>
-      <div className="text-dark  d-flex flex-column gap-3 py-3 align-items-center">
+    <div>
+      <div className="menu-container container">
+      </div>
+    
+    <div className="text-dark d-flex flex-column gap-3 py-3">
         <Garagem />
       </div>
-    </>
+      
+    </div>
   );
-}
+  }
 
 export default App;

@@ -58,6 +58,9 @@ const Garagem = () => {
   }
 
   return (
+    
+    <div className="container">
+    <h1 className="bg-primary text-light mb-3">🏠 Garagem</h1>
     <div className="d-flex flex-row gap-3">
       <SwitchContainer
         className={`${ledStatus === "ON" ? "text-success" : "text-danger"}`}
@@ -86,6 +89,7 @@ const Garagem = () => {
       />
 
       <Container />
+    </div>
     </div>
   );
 };
