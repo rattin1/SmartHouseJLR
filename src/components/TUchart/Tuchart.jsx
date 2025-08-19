@@ -299,9 +299,9 @@ const Tuchart = ({ isDark = true }) => {
           onChange={(e) => setTimeFilter(e.target.value)}
           className={`px-3 py-2 rounded border fs-6 ${isDark ? "border-secondary bg-transparent text-light" : "border-secondary bg-white text-dark"}`}
         >
-          <option value="24h">Últimas 24 horas</option>
-          <option value="yesterday">Ontem</option>
-          <option value="7days">Últimos 7 dias</option>
+          <option className='text-dark' value="24h">Últimas 24 horas</option>
+          <option className='text-dark' value="yesterday">Ontem</option>
+          <option className='text-dark' value="7days">Últimos 7 dias</option>
         </select>
       </div>
 

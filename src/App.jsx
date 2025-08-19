@@ -57,23 +57,37 @@ function App() {
           </div>
         </div>
       </header>
-
-      <div className="d-flex flex-column gap-3 py-3 align-items-center">
-        <Tuchart isDark={isDark} />
+    <header className='bg-dark bg-opacity-75 p-4 vw-100'>
+  <div className='d-flex justify-content-between align-items-center'>
+    <h1 className='text-light m-0'>SMARTHOUSEJLR</h1>
+    <button
+      className="btn bg-primary text-light btn-sm me-3"
+      data-bs-toggle="modal"
+      data-bs-target="#LogModal"
+    >
+      📝 Abrir log de mensagens
+    </button>
+  </div>
+</header>
+<div className="d-flex flex-column gap-3 py-3 align-items-center">
+      <Tuchart  isDark={isDark}/>
       </div>
-
-      <div className="d-flex flex-column gap-3 py-3 align-items-center">
-        <SalaDeEstar isDark={isDark} />
+      <div className="container-fluid px-4">
+  <div className="d-flex flex-column flex-md-row gap-0"> {/* Adicione gap-0 */}
+    {/* Sala de Estar - largura específica */}
+    <div className="col-12 col-md-8">
+      <SalaDeEstar  isDark={isDark} />
+    </div>
+    
+    {/* Quarto - ocupa espaço restante */}
+    <div className="col-12 col-md-4">
+      <Quarto  isDark={isDark} />
+    </div>
+  </div>
+</div>
+      <div className="text-dark  d-flex flex-column gap-3 py-3 align-items-center">
+        <Garagem   isDark={isDark}/>
       </div>
-
-      <div className="d-flex flex-column gap-3 py-3 align-items-center">
-        <Garagem />
-      </div>
-
-      <div className="d-flex flex-column gap-3 py-3 align-items-center">
-        <Quarto isDark={isDark} />
-      </div>
-
       {/* Modal do LogChat */}
       <div
         className="modal fade"

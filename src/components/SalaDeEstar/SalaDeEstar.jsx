@@ -67,11 +67,11 @@ const SalaDeEstar = ({ isDark = true }) => {
   const titleSkin = isDark ? "bg-primary text-light" : "bg-primary text-light"; // mantém destaque
 
   return (
-    <div className={`container p-4 rounded shadow-sm w-50 ${containerSkin}`}>
-      <h3 className={`text-center mb-4 p-3 rounded ${titleSkin}`}>
+    <div className={`p-2 border rounded-start shadow-sm h-100 w-md-auto ${containerSkin}`}>
+      <h3 className={`text-center mb-4 text-light p-3 rounded bg-primary ${titleSkin}`}>
         🏠 Sala de Estar
       </h3>
-
+  
       {/* Status da conexão */}
       <div className={`mb-4 p-2 rounded border ${isConnected ? 'bg-success bg-opacity-10 border-success' : 'bg-danger bg-opacity-10 border-danger'}`}>
         <div className="d-flex justify-content-center align-items-center">
@@ -84,10 +84,10 @@ const SalaDeEstar = ({ isDark = true }) => {
           </span>
         </div>
       </div>
-
+  
       <div className="row g-4">
         {/* LED da Sala */}
-        <div className="col-md-4">
+        <div className="col-md-4 col-sm-6 col-12">
           <SwitchContainer
             className={`${ledStatus === "ON" ? "text-success" : "text-danger"}`}
             SwitchName={`${ledStatus === "ON" ? "Desligar" : "Ligar"}`}
@@ -97,9 +97,9 @@ const SalaDeEstar = ({ isDark = true }) => {
             buttonClass={`${ledStatus === "ON" ? "btn-danger" : "btn-success"} ${!isConnected ? "disabled" : ""}`}
           />
         </div>
-
+  
         {/* Ar-condicionado Manual */}
-        <div className="col-md-4">
+        <div className="col-md-4 col-sm-6 col-12">
           <SwitchContainer
             className={`${arCondicionadoStatus === "ON" ? "text-success" : "text-danger"}`}
             SwitchName={
@@ -115,9 +115,9 @@ const SalaDeEstar = ({ isDark = true }) => {
             } ${!isConnected ? "disabled" : ""}`}
           />
         </div>
-
+  
         {/* Umidificador Manual */}
-        <div className="col-md-4">
+        <div className="col-md-4 col-sm-6 col-12">
           <SwitchContainer
             className={`${umidificadorStatus === "ON" ? "text-success" : "text-danger"}`}
             SwitchName={
@@ -133,9 +133,9 @@ const SalaDeEstar = ({ isDark = true }) => {
             } ${!isConnected ? "disabled" : ""}`}
           />
         </div>
-
+  
         {/* Automação Ar-condicionado */}
-        <div className="col-md-4">
+        <div className="col-md-4 col-sm-6 col-12">
           <SwitchContainer
             className={`${autoArStatus === "ON" ? "text-warning" : "text-secondary"}`}
             SwitchName={`${autoArStatus === "ON" ? "Desativar AUTO" : "Ativar AUTO"}`}
@@ -145,9 +145,9 @@ const SalaDeEstar = ({ isDark = true }) => {
             buttonClass={`${autoArStatus === "ON" ? "btn-warning" : "btn-outline-warning"} ${!isConnected ? "disabled" : ""}`}
           />
         </div>
-
+  
         {/* Automação Umidificador */}
-        <div className="col-md-4">
+        <div className="col-md-4 col-sm-6 col-12">
           <SwitchContainer
             className={`${autoUmidificadorStatus === "ON" ? "text-info" : "text-secondary"}`}
             SwitchName={`${autoUmidificadorStatus === "ON" ? "Desativar AUTO" : "Ativar AUTO"}`}
@@ -158,19 +158,19 @@ const SalaDeEstar = ({ isDark = true }) => {
           />
         </div>
       </div>
-
+  
       {/* Status em tempo real */}
       <div className={`mt-4 p-3 rounded ${isDark ? "bg-dark bg-opacity-75 text-light" : "bg-light text-dark border"}`}>
         <h6 className="mb-2">📊 Status Atual (ESP32):</h6>
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-4 col-sm-6 col-12">
             <small>
               🔴 LED: <strong className={ledStatus === "ON" ? "text-success" : "text-danger"}>{ledStatus}</strong><br/>
               ❄️ Ar-cond: <strong className={arCondicionadoStatus === "ON" ? "text-success" : "text-danger"}>{arCondicionadoStatus}</strong><br/>
               💧 Umidificador: <strong className={umidificadorStatus === "ON" ? "text-success" : "text-danger"}>{umidificadorStatus}</strong>
             </small>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 col-sm-6 col-12">
             <small>
               🤖 Auto AC: <strong className={autoArStatus === "ON" ? "text-warning" : "text-secondary"}>{autoArStatus}</strong><br/>
               🤖 Auto Umid: <strong className={autoUmidificadorStatus === "ON" ? "text-info" : "text-secondary"}>{autoUmidificadorStatus}</strong>
@@ -178,7 +178,7 @@ const SalaDeEstar = ({ isDark = true }) => {
           </div>
         </div>
       </div>
-
+  
       {/* Legenda */}
       <div className={`mt-4 p-3 rounded ${isDark ? "bg-dark text-light" : "bg-light text-dark border"}`}>
         <h6 className="mb-2">📋 Informações:</h6>
