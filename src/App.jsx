@@ -28,14 +28,21 @@ function App() {
 <div className="d-flex flex-column gap-3 py-3 align-items-center">
       <Tuchart/>
       </div>
-      <div className="d-flex flex-column gap-3 py-3 align-items-center">
+      <div className="container-fluid px-4">
+  <div className="d-flex flex-column flex-md-row gap-0"> {/* Adicione gap-0 */}
+    {/* Sala de Estar - largura específica */}
+    <div className="col-12 col-md-8">
       <SalaDeEstar />
-      </div>
+    </div>
+    
+    {/* Quarto - ocupa espaço restante */}
+    <div className="col-12 col-md-4">
+      <Quarto />
+    </div>
+  </div>
+</div>
       <div className="text-dark  d-flex flex-column gap-3 py-3 align-items-center">
         <Garagem />
-      </div>
-      <div className="text-dark  d-flex flex-column gap-3 py-3 align-items-center">
-        <Quarto />
       </div>
       {/* Modal do LogChat */}
       <div 
