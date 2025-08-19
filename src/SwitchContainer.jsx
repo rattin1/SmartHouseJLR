@@ -9,7 +9,7 @@ export const SwitchContainer = (props) => {
        </div>
       <span className="small text-secondary align-self-start my-3 text-opacity-75">
         Status atual:
-        <p  className={`fs-4 fw-bolder  ${props.className}`}>{props.Status}</p>
+        <p id={props.IdStatus} className={`fs-4 fw-bolder  ${props.className}`}>{props.Status}</p>
       </span>
       <button
         className={`btn btn-sm w-50 ${props.buttonClass} p-1`}

@@ -6,7 +6,10 @@ const path = "/mqtt";
 
 // 📡 Tópicos MQTT utilizados no projeto Smart House JLR
 
+
+
 // Quarto
+const movimento = "";
 const topicoLuz = "smarthouseJLR/quarto/luz";
 const topicoTomada = "smarthouseJLR/quarto/tomada";
 const topicoCortina = "smarthouseJLR/quarto/cortina";
@@ -19,6 +22,7 @@ const topicoUmidificador = "smarthouseJLR/sala/umidificador";
 const topicoStatusSala = "smarthouseJLR/sala/status";
 
 // Garagem
+const topicoGaragem = "smarthouseJLR/garagem";
 const topicoGaragemLed = "smarthouseJLR/garagem/led";
 const topicoGaragemBascular = "smarthouseJLR/garagem/bascular";
 const topicoGaragemSocial = "smarthouseJLR/garagem/social";
@@ -210,6 +214,37 @@ function setupCallbacks() {
                     }
                 });
 
+        } catch (e) {
+            // Exibe erro se o JSON estiver malformado
+            console.error("❌ Erro ao parsear JSON:", e);
+        }
+    } else if (message.destinationName === topicoGaragem){
+        movimento = message.payloadString; // Atualiza a variável movimento com o valor recebido
+        document.getElementById("movimento").innerText = movimento;
+
+    }
+};
+
+// 🔗 Conecta o cliente ao broker MQTT com SSL ativado
+client.connect({
+    useSSL: true, // obrigatório para conexões WSS (WebSocket Secure)
+
+    // ✅ Se conectar com sucesso, mostra mensagem e se inscreve nos tópicos
+    onSuccess: () => {
+        console.log("✅ Conectado ao broker MQTT");
+        
+        // Inscreve-se nos tópicos para receber dados
+        client.subscribe(topicoSensor); // dados do sensor DHT22
+        client.subscribe(topicoGaragem) // dados do sensor de movimento DIR.
+        
+        console.log("📡 Inscrito nos tópicos de monitoramento");
+    },
+
+    // ❌ Se falhar ao conectar, exibe mensagem de erro
+    onFailure: (err) => {
+        console.error("❌ Falha na conexão:", err);
+    }
+});
             } catch (e) {
                 console.error("❌ Erro ao parsear JSON:", e);
             }
@@ -444,6 +479,8 @@ export {
     controlarSala,
     controlarGaragem,
     enviarComando,
+    client
+    enviarComando,
     subscribeSensorData,
     getCurrentSensorData,
     getConnectionStatus,
@@ -452,3 +489,4 @@ export {
     subscribeDeviceStatus,
     getCurrentDeviceStatus
 };
+
