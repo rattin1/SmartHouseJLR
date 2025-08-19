@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SwitchContainer } from '../../SwitchContainer';
 import { controlarSala, getConnectionStatus, subscribeDeviceStatus } from '../../utils/mqtt';
 
-const SalaDeEstar = () => {
-  // Estados dos dispositivos (agora sincronizados com ESP32)
+const SalaDeEstar = ({ isDark = true }) => {
   const [ledStatus, setLedStatus] = useState("OFF");
   const [arCondicionadoStatus, setArCondicionadoStatus] = useState("OFF");
   const [umidificadorStatus, setUmidificadorStatus] = useState("OFF");
@@ -11,12 +10,9 @@ const SalaDeEstar = () => {
   const [autoUmidificadorStatus, setAutoUmidificadorStatus] = useState("OFF");
   const [isConnected, setIsConnected] = useState(false);
 
-  // 🆕 Escuta feedback do ESP32 sobre status dos dispositivos
   useEffect(() => {
     const unsubscribeStatus = subscribeDeviceStatus((deviceStatus) => {
       if (deviceStatus.sala) {
-        console.log("📊 Status da sala recebido:", deviceStatus.sala);
-        
         setLedStatus(deviceStatus.sala.led || "OFF");
         setArCondicionadoStatus(deviceStatus.sala.arCondicionado || "OFF");
         setUmidificadorStatus(deviceStatus.sala.umidificador || "OFF");
@@ -24,127 +20,62 @@ const SalaDeEstar = () => {
         setAutoUmidificadorStatus(deviceStatus.sala.autoUmidificador || "OFF");
       }
     });
-
     return () => unsubscribeStatus();
   }, []);
 
-  // Verifica status da conexão periodicamente
   useEffect(() => {
     const checkConnection = () => {
       const status = getConnectionStatus();
       setIsConnected(status.isConnected);
     };
-
-    // Verifica imediatamente
     checkConnection();
-
-    // Verifica a cada 2 segundos
     const interval = setInterval(checkConnection, 2000);
-
     return () => clearInterval(interval);
   }, []);
 
-  // 💡 Função para controlar LED da sala
   const mudarLed = () => {
-    if (!isConnected) {
-      console.warn("⚠️ Sem conexão MQTT - LED não pode ser controlado");
-      return;
-    }
-
+    if (!isConnected) return;
     const novoLedStatus = ledStatus === "ON" ? "OFF" : "ON";
-    // Não atualiza o estado local - espera feedback do ESP32
     controlarSala("led", novoLedStatus);
-    console.log(`🔴 Comando LED enviado: ${novoLedStatus}`);
   };
 
-  // ❄️ Função para controlar Ar-condicionado manualmente
   const mudarArCondicionado = () => {
-    if (!isConnected) {
-      console.warn("⚠️ Sem conexão MQTT - Ar-condicionado não pode ser controlado");
-      return;
-    }
-
-    if (autoArStatus === "ON") {
-      console.warn("⚠️ Modo automático ativo - desative primeiro para controle manual");
-      return;
-    }
-
+    if (!isConnected || autoArStatus === "ON") return;
     const novoArStatus = arCondicionadoStatus === "ON" ? "OFF" : "ON";
-    // Não atualiza o estado local - espera feedback do ESP32
     controlarSala("arCondicionado", novoArStatus);
-    console.log(`❄️ Comando Ar-condicionado enviado: ${novoArStatus}`);
   };
 
-  // 💧 Função para controlar Umidificador manualmente
   const mudarUmidificador = () => {
-    if (!isConnected) {
-      console.warn("⚠️ Sem conexão MQTT - Umidificador não pode ser controlado");
-      return;
-    }
-
-    if (autoUmidificadorStatus === "ON") {
-      console.warn("⚠️ Modo automático ativo - desative primeiro para controle manual");
-      return;
-    }
-
+    if (!isConnected || autoUmidificadorStatus === "ON") return;
     const novoUmidificadorStatus = umidificadorStatus === "ON" ? "OFF" : "ON";
-    // Não atualiza o estado local - espera feedback do ESP32
     controlarSala("umidificador", novoUmidificadorStatus);
-    console.log(`💧 Comando Umidificador enviado: ${novoUmidificadorStatus}`);
   };
 
-  // 🤖 Função para ativar/desativar automação do Ar-condicionado
   const mudarAutoAr = () => {
-    if (!isConnected) {
-      console.warn("⚠️ Sem conexão MQTT - Automação não pode ser controlada");
-      return;
-    }
-
+    if (!isConnected) return;
     const novoAutoArStatus = autoArStatus === "ON" ? "OFF" : "ON";
-    
-    if (novoAutoArStatus === "ON") {
-      // Ativa automação - ESP32 vai verificar temperatura atual
-      controlarSala("arCondicionado", "AUTO_ON");
-      console.log("🤖 Comando Automação Ar-condicionado: ATIVAR");
-    } else {
-      // Desativa automação
-      controlarSala("arCondicionado", "AUTO_OFF");
-      console.log("🤖 Comando Automação Ar-condicionado: DESATIVAR");
-    }
-    // Não atualiza estado local - espera feedback do ESP32
+    controlarSala("arCondicionado", novoAutoArStatus === "ON" ? "AUTO_ON" : "AUTO_OFF");
   };
 
-  // 🤖 Função para ativar/desativar automação do Umidificador
   const mudarAutoUmidificador = () => {
-    if (!isConnected) {
-      console.warn("⚠️ Sem conexão MQTT - Automação não pode ser controlada");
-      return;
-    }
-
+    if (!isConnected) return;
     const novoAutoUmidificadorStatus = autoUmidificadorStatus === "ON" ? "OFF" : "ON";
-    
-    if (novoAutoUmidificadorStatus === "ON") {
-      // Ativa automação - ESP32 vai verificar umidade atual
-      controlarSala("umidificador", "AUTO_ON");
-      console.log("🤖 Comando Automação Umidificador: ATIVAR");
-    } else {
-      // Desativa automação
-      controlarSala("umidificador", "AUTO_OFF");
-      console.log("🤖 Comando Automação Umidificador: DESATIVAR");
-    }
-    // Não atualiza estado local - espera feedback do ESP32
+    controlarSala("umidificador", novoAutoUmidificadorStatus === "ON" ? "AUTO_ON" : "AUTO_OFF");
   };
+
+  const containerSkin = isDark ? "glass-dark text-light" : "card-light text-dark";
+  const titleSkin = isDark ? "bg-primary text-light" : "bg-primary text-light"; // mantém destaque
 
   return (
-    <div className="container p-4 rounded shadow-sm w-50">
-      <h3 className="text-center mb-4 bg-primary text-light p-3 rounded">
+    <div className={`container p-4 rounded shadow-sm w-50 ${containerSkin}`}>
+      <h3 className={`text-center mb-4 p-3 rounded ${titleSkin}`}>
         🏠 Sala de Estar
       </h3>
 
       {/* Status da conexão */}
       <div className={`mb-4 p-2 rounded border ${isConnected ? 'bg-success bg-opacity-10 border-success' : 'bg-danger bg-opacity-10 border-danger'}`}>
         <div className="d-flex justify-content-center align-items-center">
-          <span>
+          <span className={isDark ? "" : "text-dark"}>
             {isConnected ? (
               <><strong>🟢 MQTT Conectado</strong> - Controles ativos</>
             ) : (
@@ -229,7 +160,7 @@ const SalaDeEstar = () => {
       </div>
 
       {/* Status em tempo real */}
-      <div className="mt-4 p-3 bg-dark bg-opacity-75 text-light rounded ">
+      <div className={`mt-4 p-3 rounded ${isDark ? "bg-dark bg-opacity-75 text-light" : "bg-light text-dark border"}`}>
         <h6 className="mb-2">📊 Status Atual (ESP32):</h6>
         <div className="row">
           <div className="col-md-4">
@@ -249,7 +180,7 @@ const SalaDeEstar = () => {
       </div>
 
       {/* Legenda */}
-      <div className="mt-4 p-3 bg-dark text-light rounded ">
+      <div className={`mt-4 p-3 rounded ${isDark ? "bg-dark text-light" : "bg-light text-dark border"}`}>
         <h6 className="mb-2">📋 Informações:</h6>
         <ul className="mb-0 small">
           <li><strong>🔄 Sincronização:</strong> Status sincronizado com ESP32 em tempo real</li>
