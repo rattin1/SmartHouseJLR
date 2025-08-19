@@ -19,7 +19,7 @@ function ToggleButton({ label, offEmoji, onEmoji, initial = false, extraClass = 
   );
 }
 
-export default function Quarto() {
+export default function Quarto({ isDark = true }) {
   const [curtainPos, setCurtainPos] = useState("aberto");
 
   const widthMap = {
@@ -28,8 +28,10 @@ export default function Quarto() {
     fechado: 100
   };
 
+  const wrapperSkin = isDark ? "bg-dark text-light" : "bg-white text-dark border";
+
   return (
-    <div className="d-flex flex-column align-items-center justify-content-center min-vh-100 bg-dark text-light p-4">
+    <div className={`d-flex flex-column align-items-center justify-content-center min-vh-100 p-4 rounded ${wrapperSkin}`}>
       <div className="text-center mb-4">
         <h1 className="fw-bold">🛏️ Quarto</h1>
         <h4 className="fw-light">Controle de Luz e Tomada</h4>
@@ -42,14 +44,14 @@ export default function Quarto() {
       </div>
 
       <div className="d-flex gap-2 mb-4">
-        <button onClick={() => setCurtainPos("aberto")} className="btn btn-light rounded-4 px-4 py-3">⬅️ Abrir</button>
-        <button onClick={() => setCurtainPos("meio")} className="btn btn-light rounded-4 px-4 py-3">⏸️ Parar</button>
-        <button onClick={() => setCurtainPos("fechado")} className="btn btn-light rounded-4 px-4 py-3">➡️ Fechar</button>
+        <button onClick={() => setCurtainPos("aberto")} className={`btn ${isDark ? "btn-light" : "btn-outline-dark"} rounded-4 px-4 py-3`}>⬅️ Abrir</button>
+        <button onClick={() => setCurtainPos("meio")} className={`btn ${isDark ? "btn-light" : "btn-outline-dark"} rounded-4 px-4 py-3`}>⏸️ Parar</button>
+        <button onClick={() => setCurtainPos("fechado")} className={`btn ${isDark ? "btn-light" : "btn-outline-dark"} rounded-4 px-4 py-3`}>➡️ Fechar</button>
       </div>
 
       <svg viewBox="0 0 100 60" width="300" height="180">
         {/* Barra da cortina */}
-        <rect x="0" y="0" width="100" height="2" fill="#3a3a3ad4" rx="2" />
+        <rect x="0" y="0" width="100" height="2" fill={isDark ? "#3a3a3ad4" : "#ced4da"} rx="2" />
 
         {/* Cortina animada */}
         <motion.rect
@@ -63,10 +65,7 @@ export default function Quarto() {
             skewX: curtainPos === "aberto" ? 0 : curtainPos === "meio" ? -3 : -6,
             rotate: curtainPos === "aberto" ? 0 : curtainPos === "meio" ? 0.5 : 1
           }}
-          transition={{
-            duration: 0.4,
-            ease: "easeInOut"
-          }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
         />
 
         {/* Gradiente para pregas */}
@@ -83,4 +82,4 @@ export default function Quarto() {
       </svg>
     </div>
   );
-};
+}

@@ -1,8 +1,41 @@
-body{
+/* Modo escuro (padrão anterior) */
+body.dark-mode {
   background: radial-gradient(circle, hsla(208, 36%, 37%, 1) 0%, hsla(0, 0%, 0%, 1) 100%) !important;
+  color: #f8f9fa;
+}
+
+/* Modo claro (simples e limpo) */
+body.light-mode {
+  background: #f8f9fa !important; /* fundo claro suave */
+  color: #212529;
+}
+
+/* reset/normalização leve que você já tinha */
+body {
   box-sizing: border-box;
   border: 0;
   padding: 0;
   margin: 0;
 }
 
+/* utilidade: cards “vidro” no dark */
+.glass-dark {
+  background: rgba(33, 37, 41, 0.75); /* bg-dark com opacidade */
+  backdrop-filter: blur(4px);
+}
+
+/* utilidade: cards claros */
+.card-light {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.075);
+}
+
+/* Switches no tema claro */
+body.light-mode .switch-container .form-check-input {
+  background-color: #dee2e6;
+  border-color: #adb5bd;
+}
+
+body.light-mode .switch-container .form-check-input:checked {
+  background-color: #0d6efd; /* Azul padrão Bootstrap */
+}

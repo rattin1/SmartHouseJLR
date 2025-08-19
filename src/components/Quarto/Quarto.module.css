@@ -1,39 +1,31 @@
 :root{
-    --btn-on-bg: linear-gradient(135deg, #fff7d6 0%, #fff3c4 100%); /* amarelo pastel */
-  }
-  
-  /* efeito de 'pressionado' leve */
-  .toggle-btn:active{ transform: translateY(1px); }
-  
-  /* quando ligado: alterar visual para amarelo pastel e texto escuro */
-  .toggle-btn.is-on{
-    background: var(--btn-on-bg);
-  }
-  
-  
-  .curtain {
-    transition: width 0.8s ease;
-    transform-origin: left;
-    stroke-width: 0.5;
-  }
-  
-  .toggle-btn { background: linear-gradient(180deg, #ffffff, #f3f3f3); }
-  .svg-curtain { display: block; margin-top: 6px; }
-  .curtain {
-    transition: width 1.2s ease-in-out, transform 0.8s ease;
-    transform-origin: left center;
-    shape-rendering: crispEdges;
-  }
-  .flutter {
-    animation: flutter 0.8s ease;
-  }
-  @keyframes flutter {
-    0% { transform: translateY(0) rotate(0); }
-    20% { transform: translateY(-3px) rotate(-1deg); }
-    50% { transform: translateY(2px) rotate(1deg); }
-    100% { transform: translateY(0) rotate(0); }
-  }
-  
-  
-  
-  
+  --btn-on-bg: linear-gradient(135deg, #fff7d6 0%, #fff3c4 100%);
+}
+
+/* efeito de 'pressionado' leve */
+.toggle-btn:active{ transform: translateY(1px); }
+
+/* quando ligado: amarelo pastel + texto escuro */
+.toggle-btn.is-on{
+  background: var(--btn-on-bg);
+}
+
+.curtain {
+  transition: width 1.2s ease-in-out, transform 0.8s ease;
+  transform-origin: left center;
+  shape-rendering: crispEdges;
+  stroke-width: 0.5;
+}
+
+.toggle-btn { background: linear-gradient(180deg, #ffffff, #f3f3f3); }
+.svg-curtain { display: block; margin-top: 6px; }
+
+.flutter {
+  animation: flutter 0.8s ease;
+}
+@keyframes flutter {
+  0% { transform: translateY(0) rotate(0); }
+  20% { transform: translateY(-3px) rotate(-1deg); }
+  50% { transform: translateY(2px) rotate(1deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
